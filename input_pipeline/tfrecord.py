@@ -9,7 +9,7 @@ import numpy as np
 def get_images(data_dir, image_name):
     image = open(data_dir + image_name + '.jpg', 'rb').read()
     return image
-
+#should use openCV or pillow?
 
 # used to convert image data and corresponding labels into TFRecord format.
 @gin.configurable
