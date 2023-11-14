@@ -25,6 +25,7 @@ def write_Tfrecord(save_path):
             }
             example = tf.train.Example(features=tf.train.Features(feature=feature))
             writer.write(example.SerializeToString())
+
     train_img_path = save_path + 'image/train/'
     train_label_imagename = get_image_names_labels(save_path + 'train.csv')
     train_label_imagename = np.random.permutation(train_label_imagename)

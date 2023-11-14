@@ -6,6 +6,8 @@ import gin
 import numpy as np
 import pandas as pd
 from input_pipeline.image_pre import augment, Ben_preprocess_circle
+
+
 def setDir(filepath):
     if not os.path.exists(filepath):
         os.mkdir(filepath)
@@ -30,10 +32,10 @@ def get_image_names_labels(path):
 
 # Using this function to write binary labels and get oversampled, preprocessed and augmented image data
 @gin.configurable
-def processing_augmentation_oversampling(lb_path, save_path, img_path, amount):  # train=True
+def processing_augmentation_oversampling(lb_path, save_path, img_path, amount):
+    # train=True
     # if test dataset; train==0 without augmentation # amount :the wanted number of images per class
     # multiplier of the number of pictures in training set
-
 
     setDir(os.path.join(save_path, 'images'))
     setDir(os.path.join(save_path, 'images', 'train'))
@@ -75,6 +77,7 @@ def processing_augmentation_oversampling(lb_path, save_path, img_path, amount): 
         writer = csv.writer(f3)
         writer.writerow(title)
 
+#now start generate train dataset
     label_imagename = get_image_names_labels(os.path.join(lb_path, 'train.csv'))
 
     k = 1
@@ -125,9 +128,9 @@ def processing_augmentation_oversampling(lb_path, save_path, img_path, amount): 
                 i = 0
 
 
-if __name__ == "__main__":
-    lb_path = 'D:\\DL Lab P1\\IDRID_dataset\\labels'
-    save_path = 'D:\\DL Lab P1\\dataset_processed\\'
-    img_path = 'D:\\DL Lab P1\\IDRID_dataset\\images\\'
-    amount = 2000
-    processing_augmentation_oversampling(lb_path, save_path, img_path, amount)
+
+if __name__ == '__main__':
+
+    gin.parse_config_file('D:\\DL Lab P1\\config.gin')
+
+    processing_augmentation_oversampling()

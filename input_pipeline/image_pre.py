@@ -172,7 +172,3 @@ def preprocess(image, label, img_height, img_width):
     return image, label
 
 
-def augment(image, label):
-    """Data augmentation"""
-
-    return image, label

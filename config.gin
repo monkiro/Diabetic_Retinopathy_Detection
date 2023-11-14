@@ -1,7 +1,6 @@
-#dataprepare_processing_augmentation_oversampling
-processing_augmentation_oversampling.lb_path='D:\\DL Lab P1\\IDRID_dataset\\labels'
-processing_augmentation_oversampling.img_path='D:\\DL Lab P1\\IDRID_dataset\\images\\'
-processing_augmentation_oversampling.save_path='D:\\DL Lab P1\\dataset_processed\\'
-processing_augmentation_oversampling.amount= 2000
-write_Tfrecord.save_path='./diabetic_retinopathy/'
-load.save_path='D:\\DL Lab P1\\dataset_processed\\'
+#processing_augmentation_oversampling
+processing_augmentation_oversampling.lb_path = 'D:\\DL Lab P1\\IDRID_dataset\\labels\\'
+processing_augmentation_oversampling.img_path = 'D:\\DL Lab P1\\IDRID_dataset\\images\\'
+processing_augmentation_oversampling.save_path = 'D:\\DL Lab P1\\dataset_processed\\'
+processing_augmentation_oversampling.amount = 2000
+
