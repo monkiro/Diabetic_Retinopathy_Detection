@@ -5,7 +5,7 @@ import cv2
 import gin
 import numpy as np
 import pandas as pd
-from input_pipeline.image_pre import augment, Ben_preprocess_circle
+from image_pre import augment, Ben_preprocess_circle
 
 
 def setDir(filepath):
@@ -128,9 +128,9 @@ def processing_augmentation_oversampling(lb_path, save_path, img_path, amount):
                 i = 0
 
 
-
-if __name__ == '__main__':
-
-    gin.parse_config_file('D:\\DL Lab P1\\config.gin')
-
-    processing_augmentation_oversampling()
+#for test
+# if __name__ == '__main__':
+#
+#     gin.parse_config_file('D:\\DL_Lab_P1\\config.gin')
+#
+#     processing_augmentation_oversampling()

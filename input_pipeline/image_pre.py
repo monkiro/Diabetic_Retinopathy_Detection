@@ -116,6 +116,7 @@ def random_hue(image):
 def random_saturation(image):
     img = tf.image.stateless_random_saturation(image, 0.8, 1.0, seed=rng.make_seeds(2)[0])
     return img
+#以上的augment操作暂时都没用到
 
 
 # Randomly flip an image horizontally (left to right) deterministically.

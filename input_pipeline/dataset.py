@@ -1,20 +1,18 @@
 import gin
 import logging
 import tensorflow as tf
-import tensorflow_datasets as tfds
-
-from input_pipeline.image_pre import preprocess, augment
+# import tensorflow_datasets as tfds
+#from input_pipeline.image_pre import preprocess, augment
 
 class DatasetInfo:
     # DatasetInfo class is used to store information about the dataset. it holds information about the dataset and
     # model architecture parameters
-    input_shape = (32, 256, 256, 3)   # 32 images in a batch, each 256x256 pixels with 3 color channels (RGB).
-    n_classes = 2
-    fc_units = 32   # fully connected layer with 32 units
-    filters_num = 32   # 32 filters in the first convolutional layer
-    dropout_rate = 0.3   # prevent overfitting
-    layer_dim = (1, 1, 1, 1)   # 1x1 convolutional layers
-
+    # input_shape = (32, 256, 256, 3)   # 32 images in a batch, each 256x256 pixels with 3 color channels (RGB).
+    # n_classes = 2
+    # fc_units = 32   # fully connected layer with 32 units
+    # filters_num = 32   # 32 filters in the first convolutional layer
+    # dropout_rate = 0.3   # prevent overfitting
+    # layer_dim = (1, 1, 1, 1)   # 1x1 convolutional layers
     def __init__(self, input_shape, n_classes, fc_units, filters_num, dropout_rate, layer_dim):
         self.input_shape = input_shape
         self.n_classes = n_classes
@@ -25,6 +23,7 @@ class DatasetInfo:
 
 
 DatasetInfo = DatasetInfo((256, 256, 3), 2, 32, 32, 0.3, (1, 1, 1, 1))
+#此段存在冗余
 
 def read_labeled_tfrecord(example):
     # read data from a TFRecord file in TensorFlow
@@ -72,74 +71,28 @@ def load(name, data_dir):
         ds_info = DatasetInfo
 
         return prepare(ds_train, ds_val, ds_test, ds_info)
-
-    elif name == "eyepacs":
-        logging.info(f"Preparing dataset {name}...")
-        (ds_train, ds_val, ds_test), ds_info = tfds.load(
-            'diabetic_retinopathy_detection/btgraham-300',
-            split=['train', 'validation', 'test'],
-            shuffle_files=True,
-            with_info=True,
-            data_dir=data_dir
-        )
-
-        def _preprocess(img_label_dict):
-            return img_label_dict['image'], img_label_dict['label']
-
-        ds_train = ds_train.map(_preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-        ds_val = ds_val.map(_preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-        ds_test = ds_test.map(_preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-
-        return prepare(ds_train, ds_val, ds_test, ds_info)
-
-    elif name == "mnist":
-        logging.info(f"Preparing dataset {name}...")
-        (ds_train, ds_val, ds_test), ds_info = tf.keras.datasets.mnist.load_data(
-            'mnist',
-            split=['train[:90%]', 'train[90%:]', 'test'],
-            shuffle_files=True,
-            as_supervised=True,
-            with_info=True,
-            data_dir=data_dir
-        )
-
-        return prepare(ds_train, ds_val, ds_test, ds_info)
-
     else:
         raise ValueError
 
 @gin.configurable
 def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
-
-    # It is designed to further process the datasets for training, validation, and testing phases of a machine
-    # learning model.
-
-    # Prepare training dataset
-    ds_train = ds_train.map(
-        preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     if caching:
         ds_train = ds_train.cache()
-    ds_train = ds_train.map(
-        augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples // 10)
+
     ds_train = ds_train.batch(batch_size)
     ds_train = ds_train.repeat(-1)
     ds_train = ds_train.prefetch(tf.data.experimental.AUTOTUNE)
 
-    # Prepare validation dataset
-    ds_val = ds_val.map(
-        preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_val = ds_val.batch(batch_size)
+
     if caching:
         ds_val = ds_val.cache()
+    ds_val = ds_val.batch(batch_size)
     ds_val = ds_val.prefetch(tf.data.experimental.AUTOTUNE)
 
-    # Prepare test dataset
-    ds_test = ds_test.map(
-        preprocess, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    ds_test = ds_test.batch(batch_size)
+
     if caching:
         ds_test = ds_test.cache()
+    ds_test = ds_test.batch(batch_size)
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
 
     return ds_train, ds_val, ds_test, ds_info
