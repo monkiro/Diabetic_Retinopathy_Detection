@@ -57,7 +57,7 @@ def main(argv):
     # gin-config
     gin.parse_config_files_and_bindings(['D:\\DL_Lab_P1\\config.gin'], [])
     save.save_config(run_paths['path_gin'], gin.config_str())
-    print("a")
+
 
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = load()

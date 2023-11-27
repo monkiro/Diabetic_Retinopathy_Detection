@@ -22,7 +22,7 @@ def write_Tfrecord(save_path):
             image_raw = get_images(test_img_path, test_label_imagename[i, 0])
             feature = {  # build Feature dictionary
                 'image': tf.train.Feature(bytes_list=tf.train.BytesList(value=[image_raw])),
-                'label': tf.train.Feature(int64_list=tf.train.Int64List(value=[int(test_label_imagename[i, 1])]))
+                'label': tf.train.Feature(int64_list=tf.train.Int64List(value=[test_label_imagename[i, 1]]))
             }
             example = tf.train.Example(features=tf.train.Features(feature=feature))
             writer.write(example.SerializeToString())
@@ -35,7 +35,7 @@ def write_Tfrecord(save_path):
             image_raw = get_images(train_img_path, train_label_imagename[i, 0])
             feature = {  # build Feature dictionary
                 'image': tf.train.Feature(bytes_list=tf.train.BytesList(value=[image_raw])),
-                'label': tf.train.Feature(int64_list=tf.train.Int64List(value=[int(train_label_imagename[i, 1])]))
+                'label': tf.train.Feature(int64_list=tf.train.Int64List(value=[train_label_imagename[i, 1]]))
             }
             example = tf.train.Example(features=tf.train.Features(feature=feature))
             writer.write(example.SerializeToString())
