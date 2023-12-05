@@ -128,7 +128,7 @@ def processing_augmentation_oversampling(lb_path, save_path, img_path, amount):
                 i = 0
 
 
-#for test
+
 # if __name__ == '__main__':
 #
 #     gin.parse_config_file('D:\\DL_Lab_P1\\config.gin')

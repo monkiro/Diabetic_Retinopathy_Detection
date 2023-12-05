@@ -14,7 +14,7 @@
 #load.data_dir='D:\\DL_Lab_P1\\dataset_processed\\'
 
 #dataset
-prepare.batch_size = 64
+prepare.batch_size = 103
 prepare.caching = False
 load.name = 'idrid'
 load.data_dir = 'D:\\DL_Lab_P1\\dataset_processed\\tensorflow_datasets\\'
@@ -33,14 +33,14 @@ Trainer.gamma=1.0
 
 
 #Basic_CNN(input_shape, base_filters, kernel_size, dense_units, dropout_rate, n_classes)
-Basic_CNN.input_shape = (256, 256, 3)   #256x256 pixels with 3 color channels (RGB).
+Basic_CNN.input_shape = (256, 256, 3) #256x256 pixels with 3 color channels (RGB).
 Basic_CNN.base_filters =32
 Basic_CNN.kernel_size=(3, 3)
 Basic_CNN.dense_units=64
 Basic_CNN.dropout_rate = 0.3
 Basic_CNN.n_classes = 2
 
-# fc_units = 32   # fully connected layer with 32 units
-# filters_num = 32   # 32 filters in the first convolutional layer
-# dropout_rate = 0.3   # prevent overfitting
-# layer_dim = (1, 1, 1, 1)   # 1x1 convolutional layers
+# fc_units = 32 # fully connected layer with 32 units
+# filters_num = 32 # 32 filters in the first convolutional layer
+# dropout_rate = 0.3 # prevent overfitting
+# layer_dim = (1, 1, 1, 1) # 1x1 convolutional layers

@@ -96,7 +96,7 @@ rng = tf.random.Generator.from_seed(123)
 
 # Adjust the brightness of images by a random factor deterministically.
 def random_brightness(image):
-    img = tf.image.stateless_random_brightness(image, 0.1, seed=rng.make_seeds(2)[0])
+    img = tf.image.stateless_random_brightness(image, 0.15, seed=rng.make_seeds(2)[0])
     return img
 
 
@@ -158,6 +158,9 @@ def augment(image):
     image = random_augment(image, random_flip_up_down)
     image = random_augment(image, random_rotate)
 
+    image = random_augment(image, random_saturation)
+    image = random_augment(image, random_contrast)
+    image = random_augment(image, random_brightness)
     return image
 
 @gin.configurable

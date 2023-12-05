@@ -91,7 +91,7 @@ def prepare(ds_train, ds_val, ds_test, ds_info, batch_size, caching):
 
     if caching:
         ds_test = ds_test.cache()
-    ds_test = ds_test.batch(batch_size)
+    ds_test = ds_test.batch(batch_size, drop_remainder=True)
     ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
 
     return ds_train, ds_val, ds_test, ds_info

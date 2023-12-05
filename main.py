@@ -22,18 +22,18 @@ from model.architecture import *
 parser = argparse.ArgumentParser(description='Train model')
 parser.add_argument('--model', choices=['Basic_CNN','vgg_like', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
                     default='Basic_CNN', help='choose model')
-parser.add_argument('--mode', choices=['train', 'test'], default='train', help='train or test')
+parser.add_argument('--mode', choices=['train', 'test'], default='test', help='train or test')
 parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'Dimensionality_Reduction', 'ROC'],
                         default='evaluate_fl', help='evaluation methods')
-parser.add_argument('--checkpoint-file', type=str, default='./ckpts/',
+parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\',
                     help='Path to checkpoint.')
 
 args = parser.parse_args()
 
 print(args.model)
 print(args.mode)
-# print(args.evaluation)
-# print(args.checkpoint-file)
+print(args.evaluation)
+print(args.checkpoint_file)
 
 # fix the seed to make the training repeatable
 def setup_seed(seed):
@@ -84,19 +84,33 @@ def main(argv):
         for _ in trainer.train():
             continue
     else:
+        desired_step=1215
         checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=model)
         manager = tf.train.CheckpointManager(checkpoint,
                                              directory=args.checkpoint_file,
                                              max_to_keep=3)
+        # 获取当前模型的全局步数
+        current_step = int(checkpoint.step)
+        tf.print("Current step:", current_step)
+        tf.print("Desired step:", desired_step)
+        tf.print("Number of checkpoints:", len(manager.checkpoints))
+        tf.print("Minus step:", desired_step - current_step)
 
-        checkpoint.restore(manager.latest_checkpoint)
+        # 加载指定步数的检查点
+        checkpoint.restore(manager.checkpoints[desired_step - current_step])
+
         if manager.latest_checkpoint:
-            tf.print("restored")
+            tf.print("Model restored successfully.")
+            # 输出模型摘要
+            model.summary()
+            # 打印模型参数
+            for variable in model.variables:
+                tf.print(variable.name, variable.shape)
         else:
-            tf.print("Error")
+            tf.print("Error loading checkpoint.")
 
         if args.evaluation == 'evaluate_fl':
-            ds_test = ds_test.batch(32)
+           #ds_test = ds_test.batch(64)
             evaluate_fl(model, ds_test)
         # elif args.evaluation == 'confusionmatrix':
         #     confusionmatrix(model, ds_test)
