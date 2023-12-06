@@ -84,30 +84,21 @@ def main(argv):
         for _ in trainer.train():
             continue
     else:
-        desired_step=1215
         checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=model)
-        manager = tf.train.CheckpointManager(checkpoint,
-                                             directory=args.checkpoint_file,
-                                             max_to_keep=3)
-        # 获取当前模型的全局步数
-        current_step = int(checkpoint.step)
-        tf.print("Current step:", current_step)
-        tf.print("Desired step:", desired_step)
-        tf.print("Number of checkpoints:", len(manager.checkpoints))
-        tf.print("Minus step:", desired_step - current_step)
 
-        # 加载指定步数的检查点
-        checkpoint.restore(manager.checkpoints[desired_step - current_step])
+        checkpoint.restore('D:\\DL_Lab_P1\\ckpts\\ckpt-16')  # sometimes the latest model is not the best,then use this
 
-        if manager.latest_checkpoint:
-            tf.print("Model restored successfully.")
-            # 输出模型摘要
-            model.summary()
-            # 打印模型参数
-            for variable in model.variables:
-                tf.print(variable.name, variable.shape)
-        else:
-            tf.print("Error loading checkpoint.")
+        #manager = tf.train.CheckpointManager(checkpoint, directory=args.checkpoint_file, max_to_keep=3)
+        #checkpoint.restore(manager.latest_checkpoint)
+
+        # if manager.latest_checkpoint:
+        #     tf.print("Model restored successfully.")
+        #
+        #     # 打印模型参数
+        #     for variable in model.variables:
+        #         tf.print(variable.name, variable.shape)
+        # else:
+        #     tf.print("Error loading checkpoint.")
 
         if args.evaluation == 'evaluate_fl':
            #ds_test = ds_test.batch(64)

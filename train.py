@@ -60,7 +60,7 @@ class Trainer(object):
         # ....
         self.checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=self.model, optimizer=self.optimizer)
         self.manager = tf.train.CheckpointManager(self.checkpoint, directory=run_paths["path_ckpts_train"],
-                                                  max_to_keep=3)
+                                                  max_to_keep=5)
         # Checkpoint Manager
         # ...
 
