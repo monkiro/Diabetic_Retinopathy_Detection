@@ -7,12 +7,7 @@ import tensorflow as tf
 class DatasetInfo:
     # DatasetInfo class is used to store information about the dataset. it holds information about the dataset and
     # model architecture parameters
-    # input_shape = (32, 256, 256, 3)   # 32 images in a batch, each 256x256 pixels with 3 color channels (RGB).
-    # n_classes = 2
-    # fc_units = 32   # fully connected layer with 32 units
-    # filters_num = 32   # 32 filters in the first convolutional layer
-    # dropout_rate = 0.3   # prevent overfitting
-    # layer_dim = (1, 1, 1, 1)   # 1x1 convolutional layers
+
     def __init__(self, input_shape, n_classes, fc_units, filters_num, dropout_rate, layer_dim):
         self.input_shape = input_shape
         self.n_classes = n_classes
@@ -23,7 +18,12 @@ class DatasetInfo:
 
 
 DatasetInfo = DatasetInfo((256, 256, 3), 2, 32, 32, 0.3, (1, 1, 1, 1))
-#此段存在冗余
+# input_shape = (32, 256, 256, 3)   # 32 images in a batch, each 256x256 pixels with 3 color channels (RGB).
+# n_classes = 2
+# fc_units = 32   # fully connected layer with 32 units
+# filters_num = 32   # 32 filters in the first convolutional layer
+# dropout_rate = 0.3   # prevent overfitting
+# layer_dim = (1, 1, 1, 1)   # 1x1 convolutional layers
 
 def read_labeled_tfrecord(example):
     # read data from a TFRecord file in TensorFlow
