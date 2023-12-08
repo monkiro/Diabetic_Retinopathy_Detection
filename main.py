@@ -15,13 +15,14 @@ from train import Trainer
 from evaluation.evaluate_loss import evaluate, evaluate_fl
 from input_pipeline.dataset import load, get_dataset
 from utils import save, logger
-from model.architecture import *
+from model.basic_CNN import *
+from model.vgg_like import *
 # from models.TL import tl_inception, tl_xception, tl_inception_resnet
 # from evaluation.metrics import confusionmatrix, ROC
 
 parser = argparse.ArgumentParser(description='Train model')
 parser.add_argument('--model', choices=['Basic_CNN','vgg_like', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
-                    default='Basic_CNN', help='choose model')
+                    default='vgg_like', help='choose model')
 parser.add_argument('--mode', choices=['train', 'test'], default='test', help='train or test')
 parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'Dimensionality_Reduction', 'ROC'],
                         default='evaluate_fl', help='evaluation methods')
@@ -64,8 +65,8 @@ def main(argv):
 
     if args.model == 'Basic_CNN':
         model = Basic_CNN()
-    # elif args.model == 'vgg_like':
-    #     model = vgg_like()
+    elif args.model == 'vgg_like':
+        model = vgg_like()
     # elif args.model == 'resnet':
     #     model = resnet(input_shape=ds_info.input_shape, n_classes=ds_info.n_classes)
     # elif args.model == 'tl_inception':
@@ -86,7 +87,7 @@ def main(argv):
     else:
         checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=model)
 
-        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-16'))  # sometimes the latest model is not the best,then use this
+        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-17'))  # sometimes the latest model is not the best,then use this
 
         #manager = tf.train.CheckpointManager(checkpoint, directory=args.checkpoint_file, max_to_keep=3)
         #checkpoint.restore(manager.latest_checkpoint)

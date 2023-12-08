@@ -15,7 +15,8 @@
 
 
 #dataset
-prepare.batch_size = 103
+prepare.batch_size = 64
+prepare.test_batch_size = 103
 prepare.caching = False
 load.name = 'idrid'
 load.data_dir = 'D:\\DL_Lab_P1\\dataset_processed\\tensorflow_datasets\\'
@@ -31,8 +32,9 @@ Trainer.gamma=1.0
 
 
 
-
 #models
+
+#basic_cnn
 #Basic_CNN(input_shape, base_filters, kernel_size, dense_units, dropout_rate, n_classes)
 Basic_CNN.input_shape = (256, 256, 3) #256x256 pixels with 3 color channels (RGB).
 Basic_CNN.base_filters =32
@@ -40,4 +42,13 @@ Basic_CNN.kernel_size=(3, 3)
 Basic_CNN.dense_units=64
 Basic_CNN.dropout_rate = 0.3
 Basic_CNN.n_classes = 2
+
+#vgg_like
+vgg_like.input_shape = (256, 256, 3)
+vgg_like.n_classes = 2
+vgg_like.base_filters = 16
+vgg_like.n_blocks =6
+vgg_like.dense_units = 64
+vgg_like.dropout_rate = 0.3
+vgg_block.kernel_size = (3, 3)
 
