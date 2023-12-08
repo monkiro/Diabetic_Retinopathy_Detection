@@ -12,7 +12,7 @@ from tensorflow import train
 class Trainer(object):
 
     def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, ckpt_interval, acc,
-                 alpha, gamma):
+                 alpha, gamma, initial_learning_rate,decay_steps):
         # Summary Writer
 
         current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -30,14 +30,16 @@ class Trainer(object):
         self.val_summary_writer = tf.summary.create_file_writer(self.val_log_dir)
         self.alpha = alpha
         self.gamma = gamma
+        self.initial_learning_rate= initial_learning_rate
+        self.decay_steps= decay_steps
         # Loss objective
         # self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False)
         self.loss_object = tf.keras.losses.BinaryFocalCrossentropy(from_logits=False, alpha=alpha, gamma=gamma)
         # self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
         # self.optimizer = tf.keras.optimizers.Adadelta(learning_rate=0.001)
-        lr_scheduler = tf.keras.optimizers.schedules.CosineDecay(initial_learning_rate=0.001,
-                                                                 decay_steps=1000,
-                                                                 alpha=0.1)
+        lr_scheduler = tf.keras.optimizers.schedules.CosineDecay(initial_learning_rate,
+                                                                 decay_steps,
+                                                                 alpha)
         self.optimizer = tf.keras.optimizers.Adam(lr_scheduler)
 
         # Metrics
