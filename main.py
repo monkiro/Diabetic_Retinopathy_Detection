@@ -17,16 +17,17 @@ from input_pipeline.dataset import load, get_dataset
 from utils import save, logger
 from model.basic_CNN import *
 from model.vgg_like import *
+from model.vgg import *
 # from models.TL import tl_inception, tl_xception, tl_inception_resnet
 # from evaluation.metrics import confusionmatrix, ROC
 
 parser = argparse.ArgumentParser(description='Train model')
-parser.add_argument('--model', choices=['Basic_CNN','vgg_like', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
-                    default='Basic_CNN', help='choose model')
+parser.add_argument('--model', choices=['Basic_CNN','vgg_like', 'vgg', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
+                    default='vgg', help='choose model')
 parser.add_argument('--mode', choices=['train', 'test'], default='test', help='train or test')
 parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'Dimensionality_Reduction', 'ROC'],
                         default='evaluate_fl', help='evaluation methods')
-parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\basic_cnn01\\',
+parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\vgg01\\',
                     help='Path to checkpoint.')
 
 args = parser.parse_args()
@@ -67,6 +68,9 @@ def main(argv):
         model = Basic_CNN()
     elif args.model == 'vgg_like':
         model = vgg_like()
+    elif args.model == 'vgg':
+        model_instance = VGG16Model()  # 创建类的实例
+        model = model_instance.vgg()  # 调用实例方法
     # elif args.model == 'resnet':
     #     model = resnet(input_shape=ds_info.input_shape, n_classes=ds_info.n_classes)
     # elif args.model == 'tl_inception':
@@ -76,7 +80,7 @@ def main(argv):
     # elif args.model == 'tl_inception_resnet':
     #     model = tl_inception_resnet(input_shape=ds_info.input_shape, n_classes=ds_info.n_classes)
     else:
-        print('Error, model does not exist')
+        print('Error, model does not exist')/6
 
     model.summary()
 
@@ -87,7 +91,7 @@ def main(argv):
     else:
         checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=model)
 
-        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-17'))  # sometimes the latest model is not the best,then use this
+        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-18'))  # sometimes the latest model is not the best,then use this
 
         #manager = tf.train.CheckpointManager(checkpoint, directory=args.checkpoint_file, max_to_keep=3)
         #checkpoint.restore(manager.latest_checkpoint)

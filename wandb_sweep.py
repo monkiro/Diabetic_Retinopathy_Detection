@@ -3,10 +3,10 @@ import wandb
 import gin
 import math
 
-from input_pipeline.datasets import load
-from models.architectures import vgg_like
+from input_pipeline.dataset import load
+from model.vgg_like import *
 from train import Trainer
-from utils import utils_params, utils_misc
+from utils import logger, save
 
 
 def train_func():
@@ -18,14 +18,14 @@ def train_func():
             bindings.append(f'{key}={value}')
 
         # generate folder structures
-        run_paths = utils_params.gen_run_folder(','.join(bindings))
+        run_paths = save.gen_run_folder(','.join(bindings))
 
         # set loggers
-        utils_misc.set_loggers(run_paths['path_logs_train'], logging.INFO)
+        logger.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
         # gin-config
         gin.parse_config_files_and_bindings(['configs/config.gin'], bindings)
-        utils_params.save_config(run_paths['path_gin'], gin.config_str())
+        save.save_config(run_paths['path_gin'], gin.config_str())
 
         # setup pipeline
         ds_train, ds_val, ds_test, ds_info = load()

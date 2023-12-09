@@ -5,17 +5,12 @@
 #processing_augmentation_oversampling.save_path = 'D:\\DL_Lab_P1\\dataset_processed\\'
 #processing_augmentation_oversampling.amount = 2000
 
-#image_pre
-#preprocess.img_height = 28
-#preprocess.img_width = 28
-
 #tfrecord
 #write_Tfrecord.save_path='D:\\DL_Lab_P1\\dataset_processed\\'
-#load.data_dir='D:\\DL_Lab_P1\\dataset_processed\\'
 
 
 #dataset
-prepare.batch_size = 64
+prepare.batch_size = 16
 prepare.test_batch_size = 103
 prepare.caching = False
 load.name = 'idrid'
@@ -55,3 +50,5 @@ vgg_like.dense_units = 64
 vgg_like.dropout_rate = 0.3
 vgg_block.kernel_size = (3, 3)
 
+#vgg
+vgg.VGG16Model.input_shape = (224, 224, 3)

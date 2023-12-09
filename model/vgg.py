@@ -1,16 +1,8 @@
 import gin
-import tensorflow as tf
-from keras import layers
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
-import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
 
 
 
@@ -23,21 +15,22 @@ class ConvBNRelu(tf.keras.Model):
         self.conv = keras.layers.Conv2D(filters=filters, kernel_size=kernel_size, strides=strides,
                                         padding=padding, kernel_regularizer=tf.keras.regularizers.l2(weight_decay))
         self.batchnorm = tf.keras.layers.BatchNormalization()
-        self.dropout = keras.layers.Dropout(droprate=droprate)
+        self.dropout = keras.layers.Dropout(rate=droprate)
 
     def call(self, inputs, training=False):
-        layer = self.conv(inputs)
-        layer = tf.nn.relu(layer)
-        layer = self.batchnorm(layer)
+        out = self.conv(inputs)
+        out = self.batchnorm(out)
+        out = tf.nn.relu(out)
         if self.drop:
-            layer = self.dropout(layer)
+            out = self.dropout(out)
 
-        return layer
+        return out
 
-
+@gin.configurable
 class VGG16Model(tf.keras.Model):
-    def __init__(self):
+    def __init__(self,input_shape):
         super(VGG16Model, self).__init__()
+        self.inputs = tf.keras.Input(input_shape)
         self.conv1 = ConvBNRelu(filters=64, kernel_size=[3, 3], droprate=0.3)
         self.conv2 = ConvBNRelu(filters=64, kernel_size=[3, 3], drop=False)
         self.maxPooling1 = keras.layers.MaxPooling2D(pool_size=(2, 2))
@@ -57,15 +50,14 @@ class VGG16Model(tf.keras.Model):
         self.conv16 = ConvBNRelu(filters=512, kernel_size=[3, 3], drop=False)
         self.maxPooling6 = keras.layers.MaxPooling2D(pool_size=(2, 2))
         self.flat = keras.layers.Flatten()
-        self.dropOut = keras.layers.Dropout(droprate=0.5)
+        self.dropout = keras.layers.Dropout(rate=0.5)
         self.dense1 = keras.layers.Dense(units=512,
                                          activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.0005))
         self.batchnorm = tf.keras.layers.BatchNormalization()
-        self.dense2 = keras.layers.Dense(units=10)
-        self.softmax = keras.layers.Activation('softmax')
+        self.dense2 = keras.layers.Dense(units=1, activation='sigmoid')
 
-    def call(self, inputs, training=False):
-        out = self.conv1(inputs)
+    def vgg(self, training=False):
+        out = self.conv1(self.inputs)
         out = self.conv2(out)
         out = self.maxPooling1(out)
         out = self.conv3(out)
@@ -83,12 +75,11 @@ class VGG16Model(tf.keras.Model):
         out = self.conv15(out)
         out = self.conv16(out)
         out = self.maxPooling6(out)
-        out = self.dropOut(out)
+        out = self.dropout(out)
         out = self.flat(out)
         out = self.dense1(out)
         out = self.batchnorm(out)
-        out = self.drop(out)
-        out = self.dense2(out)
-        outputs = self.softmax(out)
-        return outputs
+        out = self.dropout(out)
+        outputs = self.dense2(out)
+        return tf.keras.Model(inputs=self.inputs, outputs=outputs, name='vgg')
 
