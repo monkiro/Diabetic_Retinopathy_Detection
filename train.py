@@ -6,13 +6,13 @@ import tensorflow as tf
 import logging
 from tensorflow import train
 # import tensorflow_addons as tfa
-
+import wandb
 
 @gin.configurable
 class Trainer(object):
 
     def __init__(self, model, ds_train, ds_val, ds_info, run_paths, total_steps, log_interval, ckpt_interval, acc,
-                 alpha, gamma, initial_learning_rate,decay_steps):
+                 alpha, gamma, initial_learning_rate, decay_steps):
         # Summary Writer
 
         current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -31,7 +31,7 @@ class Trainer(object):
         self.alpha = alpha
         self.gamma = gamma
         self.initial_learning_rate= initial_learning_rate
-        self.decay_steps= decay_steps
+        self.decay_steps = decay_steps
         # Loss objective
         # self.loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False)
         self.loss_object = tf.keras.losses.BinaryFocalCrossentropy(from_logits=False, alpha=alpha, gamma=gamma)
@@ -59,6 +59,7 @@ class Trainer(object):
         self.log_interval = log_interval
         self.ckpt_interval = ckpt_interval
         self.acc = acc
+
         # ....
         self.checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=self.model, optimizer=self.optimizer)
         self.manager = tf.train.CheckpointManager(self.checkpoint, directory=run_paths["path_ckpts_train"],
@@ -78,7 +79,6 @@ class Trainer(object):
 
         gradients = tape.gradient(loss, self.model.trainable_variables)
         self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
-
         self.train_loss(loss)
         self.train_accuracy(labels, predictions)
 
@@ -157,6 +157,8 @@ class Trainer(object):
                 # Save final checkpoint
                 # ...
                 return self.val_accuracy.result().numpy()
+
+            wandb.log({'val_acc': self.val_accuracy.result().numpy()}, step=step)
 
         template = 'Step {}, Loss: {}, Accuracy: {}, Validation Loss: {}, Validation Accuracy: {}'
         logging.info(template.format(step,

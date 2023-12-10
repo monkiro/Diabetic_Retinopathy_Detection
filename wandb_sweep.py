@@ -17,21 +17,37 @@ def train_func():
         for key, value in run.config.items():
             bindings.append(f'{key}={value}')
 
-        # generate folder structures
-        run_paths = save.gen_run_folder(','.join(bindings))
+        # # generate folder structures
+        #
+        # # dense_units_truncated = str(run.config.vgg_like.dense_units)[:3]
+        # #dropout_rate_truncated = str(run.config['vgg_like.dropout_rate'])[:5]
+        #
+        # # bindings.append(f'vgg_like.dense_units={dense_units_truncated}')
+        # #bindings.append(f'vgg_like.dropout_rate={dropout_rate_truncated}')
+        #
+        # run_paths = save.gen_run_folder(','.join(bindings))
+        #
+        # # set loggers
+        # logger.set_loggers(run_paths['path_logs_train'], logging.INFO)
+        #
+        # # gin-config
+        # gin.parse_config_files_and_bindings(['D:\\DL_Lab_P1\\config.gin'], bindings)
+        # save.save_config(run_paths['path_gin'], gin.config_str())
+
+        run_paths = save.gen_run_folder()  # without given id,generate itself by datetime
 
         # set loggers
         logger.set_loggers(run_paths['path_logs_train'], logging.INFO)
 
         # gin-config
-        gin.parse_config_files_and_bindings(['configs/config.gin'], bindings)
+        gin.parse_config_files_and_bindings(['D:\\DL_Lab_P1\\config.gin'], [])
         save.save_config(run_paths['path_gin'], gin.config_str())
 
         # setup pipeline
         ds_train, ds_val, ds_test, ds_info = load()
 
         # model
-        model = vgg_like(input_shape=ds_info.features["image"].shape, n_classes=ds_info.features["label"].num_classes)
+        model = vgg_like()
 
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
@@ -39,15 +55,16 @@ def train_func():
 
 
 sweep_config = {
-    'name': 'mnist-example-sweep',
+    'name': 'vgg_example_sweep',
     'method': 'random',
     'metric': {
         'name': 'val_acc',
         'goal': 'maximize'
     },
+
     'parameters': {
         'Trainer.total_steps': {
-            'values': [5e4]
+            'values': [300]
         },
         'vgg_like.base_filters': {
             'distribution': 'q_log_uniform',
@@ -70,10 +87,14 @@ sweep_config = {
         'vgg_like.dropout_rate': {
             'distribution': 'uniform',
             'min': 0.1,
-            'max': 0.9
+            'max': 0.6
         }
     }
 }
 sweep_id = wandb.sweep(sweep_config)
 
-wandb.agent(sweep_id, function=train_func, count=50)
+wandb.agent(sweep_id, function=train_func, count=5)
+
+
+# if __name__ == "__main__":
+#     train_func()
