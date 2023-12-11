@@ -158,7 +158,7 @@ class Trainer(object):
                 # ...
                 return self.val_accuracy.result().numpy()
 
-            wandb.log({'val_acc': self.val_accuracy.result().numpy()}, step=step)
+            # wandb.log({'val_acc': self.val_accuracy.result().numpy()}, step=step)
 
         template = 'Step {}, Loss: {}, Accuracy: {}, Validation Loss: {}, Validation Accuracy: {}'
         logging.info(template.format(step,
