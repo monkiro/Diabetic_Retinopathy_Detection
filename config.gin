@@ -10,7 +10,7 @@
 
 
 #dataset
-prepare.batch_size = 8
+prepare.batch_size = 64
 prepare.test_batch_size = 103
 prepare.caching = False
 load.name = 'idrid'
@@ -19,7 +19,7 @@ load.data_dir = 'D:\\DL_Lab_P1\\dataset_processed\\tensorflow_datasets\\'
 
 
 # Training
-Trainer.total_steps = 200
+Trainer.total_steps = 2000
 Trainer.log_interval = 5
 Trainer.ckpt_interval = 5
 Trainer.acc=0

@@ -5,12 +5,13 @@ from numpy import *
 from input_pipeline.data_prepare import get_image_names_labels
 import numpy as np
 
+np.random.seed(42)
 
 def get_images(data_dir, image_name):
     image_path = os.path.join(data_dir, image_name + '.jpg')
     image = open(image_path, 'rb').read()
     return image
-#should use openCV or pillow?
+
 
 # used to convert image data and corresponding labels into TFRecord format.
 @gin.configurable
@@ -29,7 +30,7 @@ def write_Tfrecord(save_path):
 
     train_img_path = os.path.join(save_path, 'images', 'train')
     train_label_imagename = get_image_names_labels(save_path + 'train.csv')
-    train_label_imagename = np.random.permutation(train_label_imagename)
+    train_label_imagename = np.random.permutation(train_label_imagename) #shuffle
     with tf.io.TFRecordWriter(save_path + 'train.tfrecords') as writer:
         for i in range(int((len(train_label_imagename) * 0.8))):
             image_raw = get_images(train_img_path, train_label_imagename[i, 0])

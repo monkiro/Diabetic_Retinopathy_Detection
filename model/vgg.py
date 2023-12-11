@@ -9,7 +9,7 @@ from tensorflow import keras
 
 class ConvBNRelu(tf.keras.Model):
 #this is a vgg block
-    def __init__(self, filters, kernel_size=3, strides=1, padding='SAME', weight_decay=0.0005, droprate=0.4, drop=True):
+    def __init__(self, filters, kernel_size=3, strides=1, padding='SAME', weight_decay=0.0005, droprate=0, drop=False):
         super(ConvBNRelu, self).__init__()
         self.drop = drop
         self.conv = keras.layers.Conv2D(filters=filters, kernel_size=kernel_size, strides=strides,
@@ -31,23 +31,23 @@ class VGG16Model(tf.keras.Model):
     def __init__(self,input_shape):
         super(VGG16Model, self).__init__()
         self.inputs = tf.keras.Input(input_shape)
-        self.conv1 = ConvBNRelu(filters=64, kernel_size=[3, 3], droprate=0.3)
-        self.conv2 = ConvBNRelu(filters=64, kernel_size=[3, 3], drop=False)
+        self.conv1 = ConvBNRelu(filters=64, kernel_size=[3, 3])
+        self.conv2 = ConvBNRelu(filters=64, kernel_size=[3, 3])
         self.maxPooling1 = keras.layers.MaxPooling2D(pool_size=(2, 2))
         self.conv3 = ConvBNRelu(filters=128, kernel_size=[3, 3])
-        self.conv4 = ConvBNRelu(filters=128, kernel_size=[3, 3], drop=False)
+        self.conv4 = ConvBNRelu(filters=128, kernel_size=[3, 3])
         self.maxPooling2 = keras.layers.MaxPooling2D(pool_size=(2, 2))
         self.conv5 = ConvBNRelu(filters=256, kernel_size=[3, 3])
         self.conv6 = ConvBNRelu(filters=256, kernel_size=[3, 3])
-        self.conv7 = ConvBNRelu(filters=256, kernel_size=[3, 3], drop=False)
+        self.conv7 = ConvBNRelu(filters=256, kernel_size=[3, 3])
         self.maxPooling3 = keras.layers.MaxPooling2D(pool_size=(2, 2))
         self.conv11 = ConvBNRelu(filters=512, kernel_size=[3, 3])
         self.conv12 = ConvBNRelu(filters=512, kernel_size=[3, 3])
-        self.conv13 = ConvBNRelu(filters=512, kernel_size=[3, 3], drop=False)
+        self.conv13 = ConvBNRelu(filters=512, kernel_size=[3, 3])
         self.maxPooling5 = keras.layers.MaxPooling2D(pool_size=(2, 2))
         self.conv14 = ConvBNRelu(filters=512, kernel_size=[3, 3])
         self.conv15 = ConvBNRelu(filters=512, kernel_size=[3, 3])
-        self.conv16 = ConvBNRelu(filters=512, kernel_size=[3, 3], drop=False)
+        self.conv16 = ConvBNRelu(filters=512, kernel_size=[3, 3])
         self.maxPooling6 = keras.layers.MaxPooling2D(pool_size=(2, 2))
         self.flat = keras.layers.Flatten()
         self.dropout = keras.layers.Dropout(rate=0.5)

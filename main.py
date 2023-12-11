@@ -23,8 +23,8 @@ from model.vgg import *
 
 parser = argparse.ArgumentParser(description='Train model')
 parser.add_argument('--model', choices=['Basic_CNN','vgg_like', 'vgg', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
-                    default='vgg', help='choose model')
-parser.add_argument('--mode', choices=['train', 'test'], default='test', help='train or test')
+                    default='vgg_like', help='choose model')
+parser.add_argument('--mode', choices=['train', 'test'], default='train', help='train or test')
 parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'Dimensionality_Reduction', 'ROC'],
                         default='evaluate_fl', help='evaluation methods')
 parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\vgg01\\',
@@ -80,7 +80,7 @@ def main(argv):
     # elif args.model == 'tl_inception_resnet':
     #     model = tl_inception_resnet(input_shape=ds_info.input_shape, n_classes=ds_info.n_classes)
     else:
-        print('Error, model does not exist')/6
+        print('Error, model does not exist')
 
     model.summary()
 
