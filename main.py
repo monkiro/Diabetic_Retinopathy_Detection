@@ -13,6 +13,7 @@ import tensorflow as tf
 # from Input_pipeline.data_prepare import processing_augmentation_oversampling
 from train import Trainer
 from evaluation.evaluate_loss import evaluate, evaluate_fl
+from evaluation.metrics import confusionmatrix, ROC
 from input_pipeline.dataset import load, get_dataset
 from utils import save, logger
 from model.basic_CNN import *
@@ -23,12 +24,12 @@ from model.resnet import *
 # from evaluation.metrics import confusionmatrix, ROC
 
 parser = argparse.ArgumentParser(description='Train model')
-parser.add_argument('--model', choices=['Basic_CNN','vgg_like', 'vgg', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
-                    default='resnet', help='choose model')
+parser.add_argument('--model', choices=['Basic_CNN', 'vgg_like', 'vgg', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
+                    default='vgg_like', help='choose model')
 parser.add_argument('--mode', choices=['train', 'test'], default='test', help='train or test')
 parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'Dimensionality_Reduction', 'ROC'],
-                        default='evaluate_fl', help='evaluation methods')
-parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\resnet01\\',
+                        default='ROC', help='evaluation methods')
+parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\vgg_like02\\',
                     help='Path to checkpoint.')
 
 args = parser.parse_args()
@@ -93,7 +94,7 @@ def main(argv):
     else:
         checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=model)
 
-        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-15'))  # sometimes the latest model is not the best,then use this
+        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-20'))  # sometimes the latest model is not the best,then use this
 
         #manager = tf.train.CheckpointManager(checkpoint, directory=args.checkpoint_file, max_to_keep=3)
         #checkpoint.restore(manager.latest_checkpoint)
@@ -108,14 +109,14 @@ def main(argv):
         #     tf.print("Error loading checkpoint.")
 
         if args.evaluation == 'evaluate_fl':
-           #ds_test = ds_test.batch(64)
             evaluate_fl(model, ds_test)
-        # elif args.evaluation == 'confusionmatrix':
-        #     confusionmatrix(model, ds_test)
+        elif args.evaluation == 'confusionmatrix':
+            confusionmatrix(model, ds_test)
+        elif args.evaluation == 'ROC':
+            ROC(model, ds_test)
         # elif args.evaluation == 'Dimensionality_Reduction':
         #     Dimensionality_Reduction(model, ds_test)
-        # elif args.evaluation == 'ROC':
-        #     ROC(model, ds_test)
+
 
 
 if __name__ == "__main__":

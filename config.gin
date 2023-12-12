@@ -42,23 +42,20 @@ Trainer.decay_steps=1000
 #Basic_CNN.n_classes = 2
 
 #vgg_like
-#vgg_like.input_shape = (256, 256, 3)
-#vgg_like.n_classes = 2
-#vgg_like.base_filters = 16
-#vgg_like.n_blocks =6
-#vgg_like.dense_units = 64
-#vgg_like.dropout_rate = 0.3
-#vgg_block.kernel_size = (3, 3)
+vgg_like.input_shape = (256, 256, 3)
+vgg_like.n_classes = 2
+vgg_like.base_filters = 17
+vgg_like.n_blocks =6
+vgg_like.dense_units = 200
+vgg_like.dropout_rate = 0.58
+vgg_block.kernel_size = (3, 3)
 
 #vgg
 #vgg.VGG16Model.input_shape = (224, 224, 3)
 
 #resnet
-resnet.input_shape = (256, 256, 3)
-#resnet.base_filters = 8
-resnet.dense_units = 32
-#resnet.layer_dim=(2,2,2,2)
-resnet.dropout_rate = 0.2
-# Layers
-res_basic_block.kernel_size = (3, 3)
-res_build_block.dropout_rate = 0.2
+#resnet.input_shape = (256, 256, 3)
+#resnet.dense_units = 32
+#resnet.dropout_rate = 0.2
+#res_basic_block.kernel_size = (3, 3)
+#res_build_block.dropout_rate = 0.2

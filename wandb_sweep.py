@@ -55,7 +55,7 @@ def train_func():
 
 
 sweep_config = {
-    'name': 'vgg_example_sweep',
+    'name': 'vgg_example_sweep01',
     'method': 'random',
     'metric': {
         'name': 'val_acc',
@@ -64,7 +64,7 @@ sweep_config = {
 
     'parameters': {
         'Trainer.total_steps': {
-            'values': [300]
+            'values': [800]
         },
         'vgg_like.base_filters': {
             'distribution': 'q_log_uniform',
@@ -93,8 +93,7 @@ sweep_config = {
 }
 sweep_id = wandb.sweep(sweep_config)
 
-wandb.agent(sweep_id, function=train_func, count=5)
+wandb.agent(sweep_id, function=train_func, count=10)
 
 
-# if __name__ == "__main__":
-#     train_func()
+
