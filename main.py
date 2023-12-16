@@ -25,11 +25,11 @@ from model.resnet import *
 
 parser = argparse.ArgumentParser(description='Train model')
 parser.add_argument('--model', choices=['Basic_CNN', 'vgg_like', 'vgg', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
-                    default='vgg_like', help='choose model')
+                    default='Basic_CNN', help='choose model')
 parser.add_argument('--mode', choices=['train', 'test'], default='test', help='train or test')
 parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'Dimensionality_Reduction', 'ROC'],
-                        default='ROC', help='evaluation methods')
-parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\vgg_like02\\',
+                        default='evaluate_fl', help='evaluation methods')
+parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\basic_cnn02\\',
                     help='Path to checkpoint.')
 
 args = parser.parse_args()
@@ -94,7 +94,7 @@ def main(argv):
     else:
         checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=model)
 
-        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-20'))  # sometimes the latest model is not the best,then use this
+        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-11'))  # sometimes the latest model is not the best,then use this
 
         #manager = tf.train.CheckpointManager(checkpoint, directory=args.checkpoint_file, max_to_keep=3)
         #checkpoint.restore(manager.latest_checkpoint)

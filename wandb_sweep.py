@@ -4,6 +4,7 @@ import gin
 import math
 
 from input_pipeline.dataset import load
+from model.resnet import *
 from model.vgg_like import *
 from train import Trainer
 from utils import logger, save
@@ -47,7 +48,7 @@ def train_func():
         ds_train, ds_val, ds_test, ds_info = load()
 
         # model
-        model = vgg_like()
+        model = resnet()
 
         trainer = Trainer(model, ds_train, ds_val, ds_info, run_paths)
         for _ in trainer.train():
@@ -55,7 +56,7 @@ def train_func():
 
 
 sweep_config = {
-    'name': 'vgg_example_sweep01',
+    'name': 'resnet_example_sweep01',
     'method': 'random',
     'metric': {
         'name': 'val_acc',
@@ -64,36 +65,36 @@ sweep_config = {
 
     'parameters': {
         'Trainer.total_steps': {
-            'values': [800]
+            'values': [1000]
         },
-        'vgg_like.base_filters': {
-            'distribution': 'q_log_uniform',
-            'q': 1,
-            'min': math.log(8),
-            'max': math.log(128)
-        },
-        'vgg_like.n_blocks': {
-            'distribution': 'q_uniform',
-            'q': 1,
-            'min': 2,
-            'max': 6
-        },
-        'vgg_like.dense_units': {
+        # 'vgg_like.base_filters': {
+        #     'distribution': 'q_log_uniform',
+        #     'q': 1,
+        #     'min': math.log(8),
+        #     'max': math.log(128)
+        # },
+        # 'vgg_like.n_blocks': {
+        #     'distribution': 'q_uniform',
+        #     'q': 1,
+        #     'min': 2,
+        #     'max': 6
+        # },
+        'resnet.dense_units': {
             'distribution': 'q_log_uniform',
             'q': 1,
             'min': math.log(16),
             'max': math.log(256)
         },
-        'vgg_like.dropout_rate': {
+        'resnet.dropout_rate': {
             'distribution': 'uniform',
             'min': 0.1,
-            'max': 0.6
+            'max': 0.7
         }
     }
 }
 sweep_id = wandb.sweep(sweep_config)
 
-wandb.agent(sweep_id, function=train_func, count=10)
+wandb.agent(sweep_id, function=train_func, count=15)
 
 
 
