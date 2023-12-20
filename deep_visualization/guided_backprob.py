@@ -1,9 +1,9 @@
 import tensorflow as tf
 import cv2
 import numpy as np
-from tensorflow.keras.models import Model
+# from tensorflow.keras.models import Model
 from tensorflow.python.framework import ops
-from tensorflow.keras import backend as K
+# from tensorflow.keras import backend as K
 
 
 @tf.custom_gradient
@@ -30,7 +30,7 @@ class GuidedBackprop:
         raise ValueError("Could not find 4D layer. Cannot apply Guided Backpropagation")
 
     def build_guided_model(self):
-        gbModel = Model(
+        gbModel = tf.keras.Model(
             inputs=[self.model.inputs],
             outputs=[self.model.get_layer(self.layerName).output]
         )
@@ -62,7 +62,7 @@ def deprocess_image(x):
     # normalize tensor: center on 0., ensure std is 0.25
     x = x.copy()
     x -= x.mean()
-    x /= (x.std() + K.epsilon())
+    x /= (x.std() + tf.keras.backend.epsilon())
     x *= 0.25
 
     # clip to [0, 1]
@@ -71,7 +71,7 @@ def deprocess_image(x):
 
     # convert to RGB array
     x *= 255
-    if K.image_data_format() == 'channels_first':
+    if tf.keras.backend.image_data_format() == 'channels_first':
         x = x.transpose((1, 2, 0))
     x = np.clip(x, 0, 255).astype('uint8')
     return x

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 def dimensionality_reduction(model, ds_test):
-    second_last_layer_name = 'dense'
+    second_last_layer_name = 'dense_2'
     dr_model = tf.keras.models.Model([model.inputs], [model.get_layer(second_last_layer_name).output])
     outputs = []
     labelss = []
@@ -26,7 +26,8 @@ def dimensionality_reduction(model, ds_test):
 
         outputs = np.concatenate(outputs)
         print(count)
-        '''T-SEN'''
+
+        '''tsne dimensionality reduction'''
         tsne = TSNE(n_components=2, learning_rate=200, metric='cosine', n_jobs=-1)
         tsne.fit_transform(outputs)
         outs_2d = np.array(tsne.embedding_)
