@@ -31,7 +31,7 @@ class GradCAM:
 
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
-            (convOuts, preds) = gradModel(inputs)  # preds after softmax
+            convOuts, preds = gradModel(inputs)  # preds after softmax
 
             loss = preds[:, classIdx]
 

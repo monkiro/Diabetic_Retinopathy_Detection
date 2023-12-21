@@ -10,7 +10,7 @@ from absl import app, flags
 import tensorflow as tf
 from deep_visualization.Dimensionality_Reduction import dimensionality_reduction
 from train import Trainer
-from evaluation.evaluate_loss import evaluate, evaluate_fl
+from evaluation.evaluate_loss import evaluate0, evaluate_fl
 from evaluation.metrics import confusionmatrix, ROC
 from input_pipeline.dataset import load, get_dataset
 from utils import save, logger
@@ -26,9 +26,10 @@ parser = argparse.ArgumentParser(description='Train model')
 parser.add_argument('--model', choices=['Basic_CNN', 'vgg_like', 'vgg', 'resnet', 'tl_inception', 'tl_xception', 'tl_inception_resnet'],
                     default='vgg_like', help='choose model')
 parser.add_argument('--mode', choices=['train', 'test'], default='test', help='train or test')
-parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'dimensionality_reduction', 'ROC', 'deep_visualization'],
-                        default='deep_visualization', help='evaluation methods')
-parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\vgg_like02\\',
+parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'dimensionality_reduction', 'ROC',
+                                             'deep_visualization', 'evaluate0'],
+                        default='evaluate_fl', help='evaluation methods')
+parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\vgg_like03\\',
                     help='Path to checkpoint.')
 
 args = parser.parse_args()
@@ -95,7 +96,7 @@ def main(argv):
     else:
         checkpoint = tf.train.Checkpoint(step=tf.Variable(0), model=model)
 
-        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-20'))  # sometimes the latest model is not the best,then use this
+        checkpoint.restore(os.path.join(args.checkpoint_file, 'ckpt-40'))  # sometimes the latest model is not the best,then use this
 
         #manager = tf.train.CheckpointManager(checkpoint, directory=args.checkpoint_file, max_to_keep=3)
         #checkpoint.restore(manager.latest_checkpoint)
@@ -111,6 +112,8 @@ def main(argv):
 
         if args.evaluation == 'evaluate_fl':
             evaluate_fl(model, ds_test)
+        elif args.evaluation == 'evaluate0':
+            evaluate0(model, ds_test)
         elif args.evaluation == 'confusionmatrix':
             confusionmatrix(model, ds_test)
         elif args.evaluation == 'ROC':
@@ -124,4 +127,5 @@ def main(argv):
 
 
 if __name__ == "__main__":
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # only need for deep_visualization
     app.run(main)

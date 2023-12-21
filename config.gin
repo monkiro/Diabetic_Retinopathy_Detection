@@ -19,14 +19,14 @@ load.data_dir = 'D:\\DL_Lab_P1\\dataset_processed\\tensorflow_datasets\\'
 
 
 # Training
-#Trainer.total_steps = 2000
-#Trainer.log_interval = 5
-#Trainer.ckpt_interval = 5
-#Trainer.acc=0
-#Trainer.alpha=0.1
-#Trainer.gamma=1.0
-#Trainer.initial_learning_rate=0.001
-#Trainer.decay_steps=1000
+Trainer.total_steps = 2000
+Trainer.log_interval = 5
+Trainer.ckpt_interval = 5
+Trainer.acc=0
+Trainer.alpha=0.1
+Trainer.gamma=1.0
+Trainer.initial_learning_rate=0.001
+Trainer.decay_steps=1000
 
 
 

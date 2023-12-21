@@ -72,8 +72,8 @@ class Trainer(object):
         with tf.GradientTape() as tape:
             # training=True is only needed if there are layers with different
             # behavior during training versus inference (e.g. Dropout).
-            # labels = tf.one_hot(indices=labels, depth=2, dtype=tf.float32)
-            labels = tf.cast(labels, dtype=tf.float32)
+            labels = tf.one_hot(indices=labels, depth=2, dtype=tf.float32)
+            # labels = tf.cast(labels, dtype=tf.float32)
             predictions = self.model(images, training=True)
             loss = self.loss_object(labels, predictions)
 
@@ -86,8 +86,8 @@ class Trainer(object):
     def val_step(self, images, labels):
         # training=False is only needed if there are layers with different
         # behavior during training versus inference (e.g. Dropout).
-        # labels = tf.one_hot(indices=labels, depth=2, dtype=tf.float32)
-        labels = tf.cast(labels, dtype=tf.float32)
+        labels = tf.one_hot(indices=labels, depth=2, dtype=tf.float32)
+        # labels = tf.cast(labels, dtype=tf.float32)
         predictions = self.model(images, training=False)
         t_loss = self.loss_object(labels, predictions)
 
