@@ -28,7 +28,7 @@ parser.add_argument('--model', choices=['Basic_CNN', 'vgg_like', 'vgg', 'resnet'
 parser.add_argument('--mode', choices=['train', 'test'], default='test', help='train or test')
 parser.add_argument('--evaluation', choices=['evaluate_fl', 'confusionmatrix', 'dimensionality_reduction', 'ROC',
                                              'deep_visualization', 'evaluate0'],
-                        default='evaluate_fl', help='evaluation methods')
+                        default='deep_visualization', help='evaluation methods')
 parser.add_argument('--checkpoint_file', type=str, default='D:\\DL_Lab_P1\\ckpts\\vgg_like03\\',
                     help='Path to checkpoint.')
 
@@ -66,7 +66,7 @@ def main(argv):
     # setup pipeline
     ds_train, ds_val, ds_test, ds_info = load()
     # input for deep visualization
-    img_path = "D:\\DL_Lab_P1\\dataset_processed\\images\\showcam\\IDRiD_015.jpg"
+    img_path = "D:\\DL_Lab_P1\\dataset_processed\\images\\showcam\\IDRiD_049.jpg"
 
     if args.model == 'Basic_CNN':
         model = Basic_CNN()
