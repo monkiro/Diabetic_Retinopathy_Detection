@@ -1,15 +1,16 @@
 import tensorflow as tf
 import cv2
 import numpy as np
-# from tensorflow.keras.models import Model
-from tensorflow.python.framework import ops
-# from tensorflow.keras import backend as K
+
 
 
 @tf.custom_gradient
 def guidedRelu(x):
     def grad(dy):
-        return tf.cast(dy > 0, "float32") * tf.cast(x > 0, "float32") * dy
+        gradient = tf.cast(x > 0, "float32") * dy
+        #gradient = tf.cast(dy > 0, "float32") * tf.cast(x > 0, "float32") * dy
+        # print("GuidedRelu Gradient Shape:", gradient.shape)
+        return gradient
 
     return tf.nn.relu(x), grad
 
@@ -22,6 +23,16 @@ class GuidedBackprop:
         if self.layerName == None:
             self.layerName = self.find_target_layer()
         self.gbModel = self.build_guided_model()
+        self.print_model_layers()
+
+    def print_model_layers(self):
+        print("Modified Model Layers:")
+        for layer in self.gbModel.layers:
+            if hasattr(layer, "activation"):
+                print(layer.name, layer.activation)
+            else:
+                print(layer.name, "No activation")
+
 
     def find_target_layer(self):
         for layer in reversed(self.model.layers):
@@ -34,10 +45,11 @@ class GuidedBackprop:
             inputs=[self.model.inputs],
             outputs=[self.model.get_layer(self.layerName).output]
         )
+        print(self.layerName)
         layer_dict = [layer for layer in gbModel.layers[1:] if hasattr(layer, "activation")]
         for layer in layer_dict:
             if layer.activation == tf.keras.activations.relu:
-                layer.activation = guidedRelu
+                layer.activation = guidedRelu()
 
         return gbModel
 
@@ -53,6 +65,7 @@ class GuidedBackprop:
         saliency = cv2.resize(np.asarray(grads), upsample_size)
 
         return saliency
+
 
 
 def deprocess_image(x):
@@ -75,3 +88,4 @@ def deprocess_image(x):
         x = x.transpose((1, 2, 0))
     x = np.clip(x, 0, 255).astype('uint8')
     return x
+

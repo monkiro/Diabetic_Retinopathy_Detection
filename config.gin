@@ -34,12 +34,12 @@ Trainer.decay_steps=1000
 
 #basic_cnn
 #Basic_CNN(input_shape, base_filters, kernel_size, dense_units, dropout_rate, n_classes)
-#Basic_CNN.input_shape = (256, 256, 3)
-#Basic_CNN.base_filters =32
-#Basic_CNN.kernel_size=(3, 3)
-#Basic_CNN.dense_units=128
-#Basic_CNN.dropout_rate = 0.3
-#Basic_CNN.n_classes = 2
+Basic_CNN.input_shape = (256, 256, 3)
+Basic_CNN.base_filters =32
+Basic_CNN.kernel_size=(3, 3)
+Basic_CNN.dense_units=128
+Basic_CNN.dropout_rate = 0.3
+Basic_CNN.n_classes = 2
 
 #vgg_like
 vgg_like.input_shape = (256, 256, 3)
@@ -59,3 +59,28 @@ vgg_block.kernel_size = (3, 3)
 #resnet.dropout_rate = 0.2
 #res_basic_block.kernel_size = (3, 3)
 #res_build_block.dropout_rate = 0.242
+
+#tl_Inception
+tl_inception.n_classes=2
+tl_inception.dense_units=32
+tl_inception.dropout_rate=0.2
+
+#tl_ConvNeXtBase
+tl_ConvNeXtBase.n_classes=2
+tl_ConvNeXtBase.dense_units=32
+tl_ConvNeXtBase.dropout_rate=0.2
+
+#tl_EfficientNetV2L
+tl_EfficientNetV2L.n_classes=2
+tl_EfficientNetV2L.dense_units=32
+tl_EfficientNetV2L.dropout_rate=0.2
+
+#tl_inception_resnet
+tl_inception_resnet.n_classes=2
+tl_inception_resnet.dense_units=32
+tl_inception_resnet.dropout_rate=0.2
+
+#ResNet50
+ResNet50.n_classes=2
+ResNet50.dense_units=32
+ResNet50.dropout_rate=0.2

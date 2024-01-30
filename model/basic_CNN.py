@@ -26,8 +26,8 @@ def Basic_CNN(input_shape, base_filters, kernel_size, dense_units, dropout_rate,
     out = tf.keras.layers.Dropout(dropout_rate)(out)
     out = tf.keras.layers.Dense(dense_units/2, activation=tf.nn.relu)(out)
     out = tf.keras.layers.Dense(dense_units / 2, activation=tf.nn.relu)(out)
-    # outputs = tf.keras.layers.Dense(n_classes, activation=tf.nn.softmax)(out)
-    outputs = tf.keras.layers.Dense(1, activation=tf.nn.sigmoid)(out)
+    outputs = tf.keras.layers.Dense(n_classes, activation=tf.nn.softmax)(out)
+    # outputs = tf.keras.layers.Dense(1, activation=tf.nn.sigmoid)(out)
 
     return tf.keras.Model(inputs=inputs, outputs=outputs, name='Basic_CNN')
 

@@ -1,17 +1,9 @@
 
-import ipywidgets as widgets
 from deep_visualization.grad_cam import GradCAM, overlay_gradCAM
 from deep_visualization.guided_backprob import GuidedBackprop, deprocess_image
-import os, cv2
 import matplotlib.pyplot as plt
-from keras.utils.image_utils import load_img, img_to_array
-#from tensorflow.keras.applications.resnet_v2 import preprocess_input
 import numpy as np
-from PIL import Image
-from io import BytesIO
-from model.basic_CNN import *
-from model.vgg_like import *
-
+from deep_visualization.guided_bp import *
 
 
 
@@ -53,9 +45,13 @@ def showCAMs(img, x, GradCAM, GuidedBP, chosen_class, upsample_size):
     # plt.show()
 
     # Guided backprop
-    gb = GuidedBP.guided_backprop(x, upsample_size)
+    # gb = GuidedBP.guided_backprop(x, upsample_size)
+    # gb_im = deprocess_image(gb)
+    # gb_im = cv2.cvtColor(gb_im, cv2.COLOR_BGR2RGB)
+    gb = start()
     gb_im = deprocess_image(gb)
     gb_im = cv2.cvtColor(gb_im, cv2.COLOR_BGR2RGB)
+
     # plt.imshow(gb_im)
     # plt.show()
 
@@ -95,11 +91,11 @@ def showCAMs(img, x, GradCAM, GuidedBP, chosen_class, upsample_size):
 
 
 
-@gin.configurable
-def deep_visualization(model, img_path ):
 
-    gradCAM = GradCAM(model=model, layerName=None)   # "conv2d_9"
-    guidedBP = GuidedBackprop(model=model, layerName=None)
+def deep_visualization(model, img_path ):
+    # model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    gradCAM = GradCAM(model=model, layerName="conv2d_3")   # "conv2d_9"
+    guidedBP = GuidedBackprop(model=model)
 
     #     img = img_to_array(load_img(os.path.join(SAMPLE_DIR,imgs.value), target_size=(224,224)))
 
@@ -114,15 +110,3 @@ def deep_visualization(model, img_path ):
     showCAMs(img, x, gradCAM, guidedBP, classIdx, upsample_size)
 
 
-
-# if __name__ == '__main__':
-#
-#     gin.parse_config_file('D:\\DL_Lab_P1\\config.gin')
-#     img_path = "D:\\DL_Lab_P1\\dataset_processed\\images\\showcam\\IDRiD_015.jpg"
-#     TARGET_SIZE = (256, 256)
-#
-#     model = 'vgg_like'
-#     chosen_class = 1
-#     DECODE = {0: "NRDR", 1: "RDR"}
-#     INV_MAP = {"NRDR": 0, "RDR": 1}
-#     start(model, img_path )
